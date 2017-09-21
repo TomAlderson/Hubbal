@@ -1,0 +1,11 @@
+<% list = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'] %>
+<% secondlist = [] %>
+<% TimetableEntry.where(['day = ? and timetable_id = ?', params[:day], params[:timetable]]).each do |t| %>
+  <% secondlist << t.start %>
+<% end %>
+<% editedlist = list - secondlist %>
+
+<div class="form-group">
+    <%= label :start, "Start Hour Slot" %>
+    <%= select :timetable_entry, "start", editedlist, {}, :class => "form-control" %>
+</div>

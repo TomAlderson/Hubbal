@@ -1,0 +1,82 @@
+<!-- Main Header -->
+<header class="main-header">
+
+  <!-- Logo -->
+  <a href="/dashboard" class="logo">
+    <!-- mini logo for sidebar mini 50x50 pixels -->
+    <span class="logo-mini"><i class="fa fa-h-square"></i></span>
+    <!-- logo for regular state and mobile devices -->
+    <span class="logo-lg"><i class="fa fa-h-square"></i> <b>Hub</b>bal</span>
+  </a>
+
+  <!-- Header Navbar -->
+  <nav class="navbar navbar-static-top" role="navigation">
+    <!-- Sidebar toggle button-->
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <span class="sr-only">Toggle navigation</span>
+    </a>
+    <!-- Navbar Right Menu -->
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <!-- Messages: style can be found in dropdown.less-->
+        <li class="dropdown messages-menu">
+          <!-- Menu toggle button -->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-envelope-o"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <% m = Message.where(['recipent_id = ?', current_user.id]) %>
+            <li class="header">You have <%= Message.where(['recipent_id = ?', current_user.id]).count %> message<% if m.count != 1 %>s<% end %>.</li>
+            <li>
+              <ul class="menu">
+                <% m.order('created_at DESC').limit(3).each do |m| %>
+                  <li>
+                      <div class="pull-left">
+                        <img src="<%= m.sender_picture %>" class="img-circle" alt="User Image" style="width: 52px; margin: 0 12px;" />
+                      </div>
+                      <h4>
+                        <%= m.sender %>
+                      </h4>
+                      <p><%= truncate(m.subject, length: 15) %></p>
+                  </li>
+                <% end %>
+              </ul><!-- /.menu -->
+            </li>
+            <li class="footer" style="border-top: 1px solid #f4f4f4;"><a href="<%= messages_path %>">See All Messages</a></li>
+          </ul>
+        </li><!-- /.messages-menu -->
+        <!-- User Account Menu -->
+        <li class="dropdown user user-menu">
+          <!-- Menu Toggle Button -->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <!-- The user image in the navbar-->
+            <img src="<%= current_user.avatar.url %>" class="user-image" alt="User Image"/>
+            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+            <span class="hidden-xs"><%= current_user.name %></span>
+          </a>
+          <ul class="dropdown-menu">
+            <!-- The user image in the menu -->
+            <li class="user-header" style="padding: 22px 10px;">
+              <img src="<%= current_user.avatar.url %>" class="img-circle" alt="User Image" />
+              <p>
+                <%= current_user.name %><br/><small><i><%= current_user.level %></i></small>
+              </p>
+            </li>
+            <!-- Menu Footer-->
+            <li class="user-footer">
+              <div class="pull-left">
+                <%= link_to "Profile", current_user, :class => "btn btn-default btn-flat" %>
+              </div>
+              <div class="pull-right">
+                <%= link_to "Sign Out", logout_path, method: "delete", :class => "btn btn-default btn-flat" %>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>

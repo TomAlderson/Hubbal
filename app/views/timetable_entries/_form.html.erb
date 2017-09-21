@@ -1,0 +1,41 @@
+<%= form_for @timetable_entry, html: { multipart: true } do |f| %>
+  <%= f.hidden_field :timetable_id, :value => params[:option] %>
+  <form role="form">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :lesson_id, "Course" %>
+          <%= f.collection_select :lesson_id, Course.all, :id, :name, {}, {:class => "form-control"} %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :room, "Room" %>
+          <%= f.text_field :room, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :day, "Day" %>
+          <%= f.select :day, [['Monday', 'Monday'], ['Tuesday', 'Tuesday'], ['Wednesday', 'Wednesday'], ['Thursday', 'Thursday'], ['Friday', 'Friday'], ['Saturday', 'Saturday'], ['Sunday', 'Sunday']], {}, :class => "form-control" %> 
+        </div> 
+      </div>
+      <div class="col-md-6" id="StartSelection">
+
+      </div>
+      <div class="col-md-6" id="FinishSelection">
+
+      </div>
+    </div>
+  </form>
+<% end %>
+
+<script type="text/javascript">
+$(document).ready( function(){
+  $('#StartSelection').load("/startselect/"+$('#timetable_entry_timetable_id').val()+"/Monday");
+  $('#FinishSelection').load("/finishselect/"+$('#timetable_entry_timetable_id').val()+"/Monday");
+});
+$('#timetable_entry_day').on('change', function(){
+  $('#TimeSelection').load("/startselect/"+$('#timetable_entry_timetable_id').val()+"/"+$('#timetable_entry_day').val());
+});
+</script>

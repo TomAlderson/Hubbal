@@ -1,0 +1,41 @@
+<% page('graduation-cap',@course.name,'An overview of the chosen course.') %>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-info-circle"></i> Basic Information</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Title</strong></td>
+              <td><%= @course.name %></td>
+            </tr>
+            <tr>
+              <td><strong>Head of Course</strong></td>
+              <td><%= link_to @course.teacher, "/users/#{@course.teacher_id}" %></td>
+            </tr>
+            <tr>
+              <td><strong>Description</strong></td>
+              <td><%= @course.description %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-info-circle"></i> Course Frontend Design</h3>
+      </div>
+      <div class="box-body">
+        <%= @course.html.html_safe %>
+      </div>
+    </div>
+  </div>
+</div>

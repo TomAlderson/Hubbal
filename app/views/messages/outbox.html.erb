@@ -1,0 +1,38 @@
+<%= page('envelope','Outbox','Messages you have sent to other users.') %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Sent To</th>
+      <th>Subject</th>
+      <th>Content</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @messages.blank? %>
+      <tr>
+        <td colspan="5" class="text-center">You currently have no messages in your outbox.</td>
+      </tr>
+    <% else %>
+      <% @messages.each do |message| %>
+        <tr>
+          <td></td>
+          <td><a href="/users/<%= message.recipent_id %>"><%= message.recipient %></a></td>
+          <td><a data-url='/messages/<%= message.id %>?sender_id=<%= message.sender_id %>&outbox=true' data-target='#formModal' data-toggle='modal'><%= message.subject %></a></td>
+          <td><a data-url='/messages/<%= message.id %>?sender_id=<%= message.sender_id %>&outbox=true' data-target='#formModal' data-toggle='modal'><%= truncate(message.content, length: 60) %></a></td>
+          <td>
+            <a href="/<%= controller_name %>/<%= message.id %>" data-method="delete">
+              <span class="fa-stack fa-lg pull-right">
+                <i class="fa fa-square fa-stack-2x" style="color: #c00"></i>
+                <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

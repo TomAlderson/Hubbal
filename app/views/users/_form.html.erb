@@ -1,0 +1,63 @@
+<div id="body">
+  <%= form_for @user, html: { multipart: true } do |f| %>
+    <form role="form">
+      <div class="box-body">
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :firstname, "First Name" %>
+            <%= f.text_field :firstname, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :lastname, "Last Name" %>
+            <%= f.text_field :lastname, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :password, "Password" %>
+            <%= f.password_field :password, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :password_confirmation, "Confirm Password" %>
+            <%= f.password_field :password_confirmation, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :email, "Email Address" %>
+            <%= f.text_field :email, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :role, "Role" %>
+            <%= f.collection_select :role, Group.all, :id, :name, {}, {:class => "form-control"} %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :phone, "Mobile Phone" %>
+            <%= f.text_field :phone, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :room, "Room Number" %>
+            <%= f.text_field :room, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :avatar, "Avatar" %>
+            <%= f.file_field :avatar %>
+          </div>
+        </div>
+      </div>
+    </form>
+  <% end %>
+</div>
+

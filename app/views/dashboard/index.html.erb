@@ -1,0 +1,357 @@
+<%= page('dashboard','Dashboard','Everything important all in one place.') %>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="info-box bg-red">
+      <span class="info-box-icon"><i class="fa fa-users"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Users</span>
+        <span class="info-box-number"><%= User.all.count %>/500</span>
+        <!-- The progress section is optional -->
+        <div class="progress">
+          <div class="progress-bar" style="width: <%= (User.all.count/500.to_f*100).round %>%"></div>
+        </div>
+        <span class="progress-description">
+          <%= (User.all.count/500.to_f*100).round %>% of maximum users.
+        </span>
+      </div><!-- /.info-box-content -->
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box bg-blue">
+      <span class="info-box-icon"><i class="fa fa-book"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Courses/Classes</span>
+        <span class="info-box-number"><%= Course.all.count %>/200</span>
+        <!-- The progress section is optional -->
+        <div class="progress">
+          <div class="progress-bar" style="width: <%= (Course.all.count/200.to_f*100).round %>%"></div>
+        </div>
+        <span class="progress-description">
+          <%= (Course.all.count/200.to_f*100).round %>% of maximum courses/classes.
+        </span>
+      </div><!-- /.info-box-content -->
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class="fa fa-sign-in"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Logins Today</span>
+        <span class="info-box-number"><%= LoginActivity.where(['created_at > ? and created_at < ?', Date.today.at_midnight, Date.tomorrow.at_midnight]).count %></span>
+        <!-- The progress section is optional -->
+        <div class="progress">
+          <div class="progress-bar" style="width: <%= (LoginActivity.where(['created_at > ? and created_at < ?', Date.today.at_midnight, Date.tomorrow.at_midnight]).count/User.all.count.to_f*100).round %>%"></div>
+        </div>
+        <span class="progress-description">
+          <%= LoginActivity.where(['created_at > ? and created_at < ?', Date.today.at_midnight, Date.tomorrow.at_midnight]).group(:person_id).count.count %> users logged in out of <%= User.all.count %> users.
+        </span>
+      </div><!-- /.info-box-content -->
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box bg-yellow">
+      <span class="info-box-icon"><i class="fa fa-sticky-note"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Total Notes</span>
+        <span class="info-box-number"><%= Note.count %></span>
+        <!-- The progress section is optional -->
+        <div class="progress">
+          <div class="progress-bar" style="width: <%= (User.count/Note.count.to_f*100).round %>%"></div>
+        </div>
+        <span class="progress-description">
+          <%= User.count %> users have created <%= Note.count %> notes.
+        </span>
+      </div><!-- /.info-box-content -->
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-calendar"></i> - Today's Agenda</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <td><strong>Time</strong></td>
+              <td><strong>Task</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <% currentday = Date.today.strftime("%A") %>
+            <% x = TimetableEntry.where(['timetable_id = ? and day = ?', current_user.timetable_id, currentday]) %>
+            <% if x.blank? %>
+            <tr><td colspan="2"><%= current_user.name %> has no lessons scheduled for today.</td></tr>
+            <% else %>
+              <% x.order('start ASC').each do |t| %>
+                <tr><td><%= t.start %></td><td><%= t.course('title') %></td></tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-sign-in"></i> - Last 10 Logins</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <td><strong>Name</strong></td>
+              <td><strong>Date &amp; Time</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <% l = LoginActivity.limit(10).order('time desc') %>
+            <% if l.blank? %>
+              <tr>
+                <td colspan="2">There are currently no logins recorded.</td>
+              </tr>
+            <% else %>
+              <% l.each do |login| %>
+                <tr>
+                  <td><%= login.user.name %></td>
+                  <td><%= login.time.strftime("%d/%m/%Y - %H:%M") %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="box box-solid box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-times"></i> - Today's Absences</h3>
+        </div>
+        <div class="box-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td><strong>Name</strong></td>
+                <td><strong>Reason for Absence</strong></td>
+                <td><strong>Absent Until</strong></td>
+              </tr>
+            </thead>
+            <tbody>
+              <% x = Absence.today %>
+              <% if x.blank? %>
+                <tr>
+                  <td>There are currently no absent users today.</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              <% else %>
+                <% x.each do |a| %>
+                  <tr>
+                    <td><%= a.name %></td>
+                    <td><%= a.reason %></td>
+                    <td><%= a.date_to.tomorrow.strftime("%d/%m/%Y") %></td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box box-solid box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-sticky-note"></i> - Your Notes</h3>
+        </div>
+        <div class="box-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td><strong>Title</strong></td>
+                <td><strong>Preview</strong></td>
+                <td><strong>Created</strong></td>
+              </tr>
+            </thead>
+            <tbody id="note-holder">
+                <% note = Note.where(user_id: current_user.id) %>
+                <% if note.blank? %>
+                  <tr>
+                    <td colspan="3" class="zero-notes">You currently have no notes!</td>
+                  </tr>
+                <% else %>
+                 <% note.each do |n| %>
+                    <tr>
+                      <td><a href="#" data-url="/notes/<%= n.id %>/edit" data-target="#formModal" data-toggle="modal"><%= n.title %></a></td>
+                      <td><a href="#" data-url="/notes/<%= n.id %>/edit" data-target="#formModal" data-toggle="modal"><%= truncate(sanitize(n.preview, :tags=>[]), length: 30) %></a></td>
+                      <td><a href="#" data-url="/notes/<%= n.id %>/edit" data-target="#formModal" data-toggle="modal"><%= n.created_at %></a></td>
+                    </tr>
+                  <% end %>
+                <% end %>
+            </tbody>
+          </table>
+          <form class="new_note" id="new_note" action="/notes" accept-charset="UTF-8" method="post">
+          <input name="user_id" type="hidden" value="<%= current_user.id %>">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"></label>
+                <input type="text" name="title" class="form-control" placeholder="Title...">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <textarea name="preview" id="note"></textarea>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group pull-right">
+                <button class="btn btn-default"><i class="fa fa-plus"></i> Add Note</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="box box-solid box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-clock-o"></i> - Date &amp; Time</h3>
+        </div>
+        <div class="box-body text-center">
+          <h1 id="date" class="date"></h1>
+          <h3 id="time" class="time"></h3>
+        </div>
+      </div>
+      <div class="box box-solid box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-clock-o"></i> - Calendar</h3>
+        </div>
+        <div class="box-body text-center">
+          <div class="calendar" id="datepicker"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $( "#datepicker" ).datepicker();
+      $('#note').froalaEditor({
+        height: 200,
+        charCounterCount: false,
+        placeholderText: 'Your Note...'
+
+      });
+    $("#new_note").submit(function(e)
+      {
+          e.preventDefault(); //STOP default action
+          var note = $(this).serializeArray();
+          var formURL = $(this).attr("action");
+          $.ajax(
+          {
+              url : formURL,
+              type: "POST",
+              dataType: "JSON",
+              data: note,
+              success:function(data, textStatus, jqXHR) 
+              {
+                if ($('.zero-notes').length) {
+                  $('.zero-notes').remove();
+                }
+                $('#note-holder').append('<tr><td><a href="#" data-url="/notes/'+data['id']+'/edit" data-target="#formModal" data-toggle="modal">'+data["title"]+'</a></td><td><a href="#" data-url="/notes/'+data['id']+'/edit" data-target="#formModal" data-toggle="modal">'+data["preview"]+'</a></td><td><a href="#" data-url="/notes/'+data['id']+'/edit" data-target="#formModal" data-toggle="modal">'+data["created_at"]+'</a></td></tr>');
+              },
+              error: function(jqXHR, textStatus, errorThrown) 
+              {
+                  alert(errorThrown);    
+              }
+          });
+      });
+      var d = new Date();
+      var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+      var date = document.getElementById("date");
+      var time = document.getElementById("time");
+
+      function getDate() {
+          date.innerHTML = monthNames[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+      }
+
+      function timer() {
+          setTimeout(timer, 1000);
+          var d = new Date();
+          var hours = d.getHours();
+          var minutes = d.getMinutes();
+          var ampm = hours <= 11 ? 'am' : 'pm';
+          var strTime = [hours % 12,
+                        (minutes < 10 ? "0" + minutes : minutes)
+                        ].join(':') + ampm;
+          time.innerHTML = strTime;
+          setTimeout(timer, 1000);
+      }
+
+      getDate();
+      timer();
+  });
+  $(document).ready(function () {
+    $( "#datepicker" ).datepicker();
+      $('#note').froalaEditor({
+        height: 200,
+        charCounterCount: false,
+        placeholderText: 'Your Note...'
+
+      });
+    $("#new_note").submit(function(e)
+      {
+          e.preventDefault(); //STOP default action
+          var note = $(this).serializeArray();
+          var formURL = $(this).attr("action");
+          $.ajax(
+          {
+              url : formURL,
+              type: "POST",
+              dataType: "JSON",
+              data: note,
+              success:function(data, textStatus, jqXHR) 
+              {
+                if ($('.zero-notes').length) {
+                  $('.zero-notes').remove();
+                }
+                $('#note-holder').append('<tr><td><a href="#" data-url="/notes/'+data['id']+'/edit" data-target="#formModal" data-toggle="modal">'+data["title"]+'</a></td><td><a href="#" data-url="/notes/'+data['id']+'/edit" data-target="#formModal" data-toggle="modal">'+data["preview"]+'</a></td><td><a href="#" data-url="/notes/'+data['id']+'/edit" data-target="#formModal" data-toggle="modal">'+data["created_at"]+'</a></td></tr>');
+              },
+              error: function(jqXHR, textStatus, errorThrown) 
+              {
+                  alert(errorThrown);    
+              }
+          });
+      });
+      var d = new Date();
+      var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+      var date = document.getElementById("date");
+      var time = document.getElementById("time");
+
+      function getDate() {
+          date.innerHTML = monthNames[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+      }
+
+      function timer() {
+          setTimeout(timer, 1000);
+          var d = new Date();
+          var hours = d.getHours();
+          var minutes = d.getMinutes();
+          var ampm = hours <= 11 ? 'am' : 'pm';
+          var strTime = [hours % 12,
+                        (minutes < 10 ? "0" + minutes : minutes)
+                        ].join(':') + ampm;
+          time.innerHTML = strTime;
+          setTimeout(timer, 1000);
+      }
+
+      getDate();
+      timer();
+  });
+</script>

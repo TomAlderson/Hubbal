@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  timetable_id: 1
+  lesson_id: 1
+  start: 2015-10-02 22:02:54
+  finish: 2015-10-02 22:02:54
+
+two:
+  timetable_id: 1
+  lesson_id: 1
+  start: 2015-10-02 22:02:54
+  finish: 2015-10-02 22:02:54

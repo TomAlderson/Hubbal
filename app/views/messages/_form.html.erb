@@ -1,0 +1,52 @@
+<div id="body">
+  <%= form_for(@message) do |f| %>
+    <form role="form">
+      <div class="box-body">
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :recipent_id, "Recipient" %><br>
+            <%= text_field_tag "display_name", "", :class => "form-control" %>
+            <%= f.hidden_field :recipent_id %>
+            <%= f.hidden_field :sender_id, :value => current_user.id %>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :subject, "Subject" %><br>
+            <%= f.text_field :subject, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :content, "Message" %><br>
+            <%= f.text_area :content %>
+          </div>
+        </div>
+      </div>
+    </form>
+  <% end %>
+</div>
+
+<% userstestarray = "[" %>
+<% User.all.each do |u| %>
+  <% userstestarray += "{ label: \"#{u.name}\", id: #{u.id}}," %>
+<% end %>
+<% userstestarray += "]" %>
+
+  <script>
+  $(function() {
+    $('#message_content').froalaEditor({
+      height: 200,
+    });
+    var availableTags =<%= userstestarray.html_safe %>;
+    $( "#display_name" ).autocomplete({
+      source: availableTags,
+      select: function (event, ui) {
+        event.preventDefault();
+        $('#display_name').val(ui.item.label);
+        $('#message_recipent_id').val(ui.item.id);
+      }
+    });
+  });
+  </script>
+

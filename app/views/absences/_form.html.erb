@@ -1,0 +1,79 @@
+<div id="body">
+  <%= form_for(@absence) do |f| %>
+    <form role="form">
+      <div class="box-body">
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :user_id, "Name of Absent User" %>
+            <%= text_field_tag "display_name", "", :class => "form-control" %>
+            <%= f.hidden_field :user_id, :class => "form-control" %>
+            <%= f.hidden_field :reporter_id, :value => current_user.id %>
+            <%= f.hidden_field :date_from %>
+            <%= f.hidden_field :date_to %>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :date_range, "Date Range" %>
+            <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+              <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+              <span></span> <b class="caret"></b>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12" style="margin: 16px 0 0;">
+          <div class="form-group">
+            <%= f.label :reason, "Reason" %><br>
+            <%= f.select :reason, "<option value='Sickness'>Sickness</option><option value='Personal'>Personal</option><option value='Courses'>Courses</option><option value='Meetings'>Meetings</option>".html_safe, {}, { class: "form-control" } %>
+          </div>
+        </div>
+      </div>
+    </form>
+  <% end %>
+</div>
+
+<% userstestarray = "[" %>
+<% User.all.each do |u| %>
+  <% userstestarray += "{ label: \"#{u.name}\", id: #{u.id}}," %>
+<% end %>
+<% userstestarray += "]" %>
+
+<script>
+  $(function() {
+    $('#course_html').froalaEditor({
+      height: 200,
+    });
+    var availableTags =<%= userstestarray.html_safe %>;
+    $( "#display_name" ).autocomplete({
+      source: availableTags,
+      select: function (event, ui) {
+        event.preventDefault();
+        $('#display_name').val(ui.item.label);
+        $('#absence_user_id').val(ui.item.id);
+      }
+    });
+  });
+  $(function() {
+
+    function cb(start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('#absence_date_from').val(start.format('D-MM-YYYY'));
+        $('#absence_date_to').val(end.format('D-MM-YYYY'));
+    }
+    cb(moment().subtract(29, 'days'), moment());
+
+    $('#reportrange').daterangepicker({
+        ranges: {
+           'Today': [moment(), moment().add(1, 'days')],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+});
+
+</script>
+

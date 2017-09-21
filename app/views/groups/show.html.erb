@@ -1,0 +1,49 @@
+<% page("users",@group.name,"Managed by #{@group.leader}.") %>
+
+<div class="row">
+  <div class="col-md-4">
+  	<div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-info-circle"></i> Basic Information</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Name</strong></td>
+              <td><%= @group.name %></td>
+            </tr>
+            <tr>
+              <td><strong>Leader</strong></td>
+              <td><%= @group.leader %></td>
+            </tr>
+            <tr>
+              <td><strong>Total Members</strong></td>
+              <td><%= @group.users.count %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-user"></i> People in this Group</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+          </thead>
+          <tbody>
+          <% @group.users.each do |u| %>
+            <tr>
+              <td><%= link_to u.name, u %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

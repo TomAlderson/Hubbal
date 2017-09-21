@@ -1,0 +1,40 @@
+ 
+  <%= form_for @group, html: { multipart: true } do |f| %>
+    <form role="form">
+      <div class="box-body">
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :name, "Name" %>
+            <%= f.text_field :name, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :leader_id, "Manager" %>
+            <%= text_field_tag "display_name", "", :class => "form-control" %>
+            <%= f.hidden_field :leader_id %>
+          </div>
+        </div>
+      </div>
+    </form>
+  <% end %>
+
+<% userstestarray = "[" %>
+<% User.all.each do |u| %>
+  <% userstestarray += "{ label: \"#{u.name}\", id: #{u.id}}," %>
+<% end %>
+<% userstestarray += "]" %>
+
+  <script>
+  $(function() {
+    var availableTags =<%= userstestarray.html_safe %>;
+    $( "#display_name" ).autocomplete({
+      source: availableTags,
+      select: function (event, ui) {
+        event.preventDefault();
+        $('#display_name').val(ui.item.label);
+        $('#group_leader_id').val(ui.item.id);
+      }
+    });
+  });
+  </script>

@@ -1,0 +1,131 @@
+<% page("user",@user.name,@user.level) %>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-info-circle"></i> - Basic Information</h3>
+      </div>
+      <div class="box-body">
+        <%= image_tag @user.avatar.url, :class => "img-responsive profile-img" %>
+        <table class="table table-striped">
+          <thead>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Username</strong></td>
+              <td><%= @user.username %></td>
+            </tr>
+            <tr>
+              <td><strong>First Name</strong></td>
+              <td><%= @user.firstname %></td>
+            </tr>
+            <tr>
+              <td><strong>Last Name</strong></td>
+              <td><%= @user.lastname %></td>
+            </tr>
+            <tr>
+              <td><strong>Role</strong></td>
+              <td><%= @user.level %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-4">
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-calendar"></i> - Timetable Today</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <td><strong>Time</strong></td>
+              <td><strong>Task</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <% currentday = Date.today.strftime("%A") %>
+            <% x = TimetableEntry.where(['timetable_id = ? and day = ?', @user.timetable_id, currentday]) %>
+            <% if x.blank? %>
+            <tr><td colspan="2"><%= @user.name %> has no lessons scheduled for today.</td></tr>
+            <% else %>
+              <% x.order('start ASC').each do |t| %>
+                <tr><td><%= t.start %></td><td><%= t.course('title') %></td></tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-sign-in"></i> - Login Activity</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <td><strong>Time</strong></td>
+              <td><strong>IP Address</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <% @user.logs.each do |l| %>
+              <tr>
+                <td><%= l.time.strftime("%d/%m/%Y - %H:%M") unless l.time.blank? %></td>
+                <td><%= l.ip unless l.time.blank? %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-md-4">
+    <div class="box box-solid box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-comment-o"></i> - Contact Information</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Email Address</strong></td>
+              <td><%= @user.email %></td>
+            </tr>
+            <tr>
+              <td><strong>Contact Number</strong></td>
+              <td><%= @user.phone %></td>
+            </tr>
+            <tr>
+              <td><strong>Room Number</strong></td>
+              <td><%= @user.room %></td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <td class="text-center"><strong>If unavailable, contact...</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center"><%= @user.employer %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

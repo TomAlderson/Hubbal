@@ -1,0 +1,23 @@
+<div id="header">
+		<%= yield :icon %> - <%= yield :header %>
+	</div>
+	<div id="body">
+		<%= yield %>
+	</div>
+	<div id="footer">
+		<% if (action_name == "edit") or (controller_name == "timetable_entries" and action_name == "show") %>
+			<span class="pull-left">
+				<a href="/<%= params[:controller] %>/<%= params[:id] %>" data-method="delete">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+				</a>
+	        </span>
+	    <% end %>
+	    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	    <% if params[:outbox].nil? %>
+		    <% if (action_name != "show") || (controller_name == "timetable_entries" and action_name == "show") %>
+		    	<button type="button" class="btn btn-primary submit-form" onclick="$('.modal-body form').submit();">Submit</button>
+		    <% else %>
+		    	<a href="/users/<%= params[:sender_id] %>"><button type="button" class="btn btn-primary submit-form">Reply</button></a>
+		    <% end %>
+		<% end %>
+	</div>

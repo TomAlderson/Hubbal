@@ -1,0 +1,58 @@
+I"9(function() {
+  var ready;
+
+  ready = function() {
+    var d, date, getDate, monthNames, time, timer;
+    getDate = function() {
+      date.innerHTML = monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    };
+    timer = function() {
+      var ampm, d, hours, minutes, strTime;
+      setTimeout(timer, 1000);
+      d = new Date;
+      hours = d.getHours();
+      minutes = d.getMinutes();
+      ampm = hours <= 11 ? 'am' : 'pm';
+      strTime = [hours % 12, minutes < 10 ? '0' + minutes : minutes].join(':') + ampm;
+      time.innerHTML = strTime;
+      setTimeout(timer, 1000);
+    };
+    $('#datepicker').datepicker();
+    $('#note').froalaEditor({
+      height: 200,
+      charCounterCount: false,
+      placeholderText: 'Your Note...'
+    });
+    $('#new_note').submit(function(e) {
+      var formURL, note;
+      e.preventDefault();
+      note = $(this).serializeArray();
+      formURL = $(this).attr('action');
+      $.ajax({
+        url: formURL,
+        type: 'POST',
+        dataType: 'JSON',
+        data: note,
+        success: function(data, textStatus, jqXHR) {
+          if ($('.zero-notes').length) {
+            $('.zero-notes').remove();
+          }
+          $('#note-holder').append('<tr><td><a href="#" data-url="/notes/' + data['id'] + '/edit" data-target="#formModal" data-toggle="modal">' + data['title'] + '</a></td><td><a href="#" data-url="/notes/' + data['id'] + '/edit" data-target="#formModal" data-toggle="modal">' + data['preview'] + '</a></td><td><a href="#" data-url="/notes/' + data['id'] + '/edit" data-target="#formModal" data-toggle="modal">' + data['created_at'] + '</a></td></tr>');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          alert(errorThrown);
+        }
+      });
+    });
+    d = new Date;
+    monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    date = document.getElementById('date');
+    time = document.getElementById('time');
+    getDate();
+    timer();
+  };
+
+  $(document).on('page:load', ready);
+
+}).call(this);
+:ET

@@ -1,0 +1,16 @@
+<% page('graduation-cap',@timetable_entry.course('title'),'') %>
+
+<p>
+  <strong>Day:</strong>
+  <%= @timetable_entry.day %>
+</p>
+
+<p>
+  <strong>Start Time:</strong>
+  <%= @timetable_entry.start.to_time.strftime("%H:%M %p") %>
+</p>
+
+<p>
+  <strong>Room:</strong>
+  <%= @timetable_entry.room %>
+</p>

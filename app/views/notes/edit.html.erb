@@ -1,0 +1,28 @@
+<%= page('pencil','Edit Note','') %>
+
+<div id="body">
+  <%= form_for(@note) do |f| %>
+    <form role="form">
+      <div class="box-body">
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :title, "Title" %><br>
+            <%= f.text_field :title, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <textarea name="preview" id="note_preview"><%= @note.preview %></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+  <% end %>
+</div>
+
+<script>
+  $('#note_preview').froalaEditor({
+      height: 300,
+    });
+</script>
+

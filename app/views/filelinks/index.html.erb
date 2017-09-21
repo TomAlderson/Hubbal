@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Filelinks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th>Link</th>
+      <th>Size</th>
+      <th>Type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @filelinks.each do |filelink| %>
+      <tr>
+        <td><%= filelink.content_id %></td>
+        <td><%= filelink.link %></td>
+        <td><%= filelink.size %></td>
+        <td><%= filelink.type %></td>
+        <td><%= link_to 'Show', filelink %></td>
+        <td><%= link_to 'Edit', edit_filelink_path(filelink) %></td>
+        <td><%= link_to 'Destroy', filelink, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Filelink', new_filelink_path %>

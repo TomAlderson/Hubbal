@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Silverleaf College &raquo; Developing the future together.</title>
+  <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <%= csrf_meta_tags %>
+</head>
+  <body class="frontend">
+    <div class="navigation-bar">
+      <div class="logo"><img src="/assets/frontend/logo.png" alt="Silverleaf College Logo"></div>
+      <div class="navigation-bar__container">
+        <div class="navigation-bar__item"><a href="/">Home</a></div>
+        <div class="navigation-bar__item"><a href="/about">About</a></div>
+        <div class="navigation-bar__item"><a href="/history">History</a></div>
+        <div class="navigation-bar__item navigation-bar__item--dropdown">
+          <div class="navigation-bar__dropdown-label">Courses</div>
+          <div class="navigation-bar__dropdown-container">
+            <% Course.all.each do |c| %>
+              <div class="navigation-bar__dropdown-item"><a href="/course/<%= c.title %>">&raquo; <%= c.name %></a></div>
+            <% end %>
+          </div>
+        </div>
+        <div class="navigation-bar__item"><a href="/location">Location</a></div>
+        <div class="navigation-bar__item"><a href="/support">Support</a></div>
+      </div>
+    </div>
+    <div class="banner">
+      <div class="banner__content">
+        <div class="banner__title">Silverleaf College</div>
+        <div class="banner__subtitle">Developing the future together.</div>
+      </div>
+    </div>
+    <div class="mid-logo">
+      <img src="/assets/frontend/logo.png" class="mid-logo__image" alt="Silverleaf College Logo">
+    </div>
+    <div class="container">
+      <div class="faq">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="faq__box">
+              <div class="faq__title">Why SilverLeaf College?</div>
+              <div class="faq__content">SilverLeaf College is known for it's prestigous results from Ofsted and we pride ourselves on our reputation, in the past five years we have continued to deliver forever-improving results in GCSE exams.</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="faq__box">
+              <div class="faq__title">How do I enroll my child?</div>
+              <div class="faq__content">Enrolment here at Silverleaf College is a simple process, requiring a simple phone call to request a prospectus and application form, from there all you need to do is fill in and return the completed forms.</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="faq__box">
+              <div class="faq__title">What courses are available?</div>
+                <div class="faq__content">You will be able to find all of our available courses to enrol on in the 'Courses' section located in the navigation, alternatively, you can click <u>here</u>.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="content">
+            <%= yield %>
+      </section>
+    </div>
+    <div class="footer frontend-footer">
+    Website developed for testing purposes of the Hubbal application. Silverleaf College is pure fictional and is in no way related to the Hubbal application besides testing.
+    </div>
+  </body>
+</html>

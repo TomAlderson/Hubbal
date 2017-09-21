@@ -1,0 +1,5 @@
+This file has been created to label the demonstration username and password for the application.
+--------------------------------------------------------------------------------------------------
+
+Username: 92JSmith1
+Password: demo

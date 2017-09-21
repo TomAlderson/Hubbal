@@ -1,0 +1,18 @@
+<% page("users","Users","A list of every single user within the system.") %>
+
+<div class="row">
+  <% @users.order('role DESC').each do |user| %>
+      <%= link_to(user) do %>
+        <div class="col-md-2">
+          <div class="box box-<%= user.status_colour %>">
+            <div class="box-body box-profile text-center">
+              <img class="profile-user-img img-responsive img-circle user-photo-example" src="<%= user.avatar.url %>" alt="User profile picture">
+              <h3 class="profile-username text-center"><%= user.name %></h3>
+              <small><%= user.username %></small>
+              <p class="text-muted text-center"><%= user.level %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+  <% end %>
+</div>
